@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arduino Projects</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { text-align: center; }
+    h2 { margin-top: 30px; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Arduino Projects Code</h1>
+
+  <h2>1. LED/Buzzer ON for 1 sec every 2 seconds</h2>
+  <pre><code class="language-cpp">
+const int ledPin = 13;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(ledPin, HIGH);
+  delay(1000);
+  digitalWrite(ledPin, LOW);
+  delay(2000);
+}
+  </code></pre>
+
+  <h2>2. Push Button/Digital Sensor to Turn ON LED</h2>
+  <pre><code class="language-cpp">
+const int buttonPin = 2;
+const int ledPin = 13;
+
+void setup() {
+  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  int buttonState = digitalRead(buttonPin);
+  if (buttonState == LOW) {
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+}
+  </code></pre>
+
+  <h2>3. DHT11 Sensor to Print Temperature and Humidity</h2>
+  <pre><code class="language-cpp">
+// Requires DHT library
+#include <DHT.h>
+
+#define DHTPIN 2
+#define DHTTYPE DHT11
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+}
+
+void loop() {
+  float temp = dht.readTemperature();
+  float hum = dht.readHumidity();
+
+  if (isnan(temp) || isnan(hum)) {
+    Serial.println("Failed to read from DHT sensor!");
+  } else {
+    Serial.print("Temperature: ");
+    Serial.print(temp);
+    Serial.print(" °C, Humidity: ");
+    Serial.print(hum);
+    Serial.println(" %");
+  }
+  delay(2000);
+}
+  </code></pre>
+
+  <h2>4. OLED to Display Temperature and Humidity</h2>
+  <pre><code class="language-cpp">
+// Requires Adafruit_SSD1306 and DHT libraries
+#include <Adafruit_SSD1306.h>
+#include <DHT.h>
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET -1
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+#define DHTPIN 2
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+  dht.begin();
+}
+
+void loop() {
+  float temp = dht.readTemperature();
+  float hum = dht.readHumidity();
+
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  if (isnan(temp) || isnan(hum)) {
+    display.println("DHT Error");
+  } else {
+    display.print("Temp: ");
+    display.print(temp);
+    display.println(" C");
+    display.print("Humidity: ");
+    display.print(hum);
+    display.println(" %");
+  }
+  display.display();
+  delay(2000);
+}
+  </code></pre>
+
+  <h2>5. Motor with Relay and Push Button</h2>
+  <pre><code class="language-cpp">
+const int buttonPin = 2;
+const int relayPin = 8;
+
+void setup() {
+  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(relayPin, OUTPUT);
+  digitalWrite(relayPin, LOW);
+}
+
+void loop() {
+  int buttonState = digitalRead(buttonPin);
+  if (buttonState == LOW) {
+    digitalWrite(relayPin, HIGH);
+  } else {
+    digitalWrite(relayPin, LOW);
+  }
+}
+  </code></pre>
+
+  <h2>6. Soil Moisture Sensor</h2>
+  <pre><code class="language-cpp">
+const int soilPin = A0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int soilMoisture = analogRead(soilPin);
+  int moisturePercent = map(soilMoisture, 0, 1023, 0, 100);
+
+  Serial.print("Soil Moisture: ");
+  Serial.print(moisturePercent);
+  Serial.println(" %");
+  delay(1000);
+}
+  </code></pre>
+
+  <h2>7. LDR/Photo Sensor</h2>
+  <pre><code class="language-cpp">
+const int ldrPin = A0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int ldrValue = analogRead(ldrPin);
+  Serial.print("LDR Value: ");
+  Serial.println(ldrValue);
+  delay(1000);
+}
+  </code></pre>
+
+  <h2>8. Ultrasonic Sensor</h2>
+  <pre><code class="language-cpp">
+// Optional: Use NewPing library for better accuracy
+const int trigPin = 9;
+const int echoPin = 10;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+}
+
+void loop() {
+  long duration;
+  int distance;
+
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+  distance = duration * 0.034 / 2;
+
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+  delay(1000);
+}
+  </code></pre>
+
+  <h2>9. Upload Temperature and Humidity to ThingSpeak</h2>
+  <pre><code class="language-cpp">
+// Requires ESP8266WiFi and DHT libraries
+#include <ESP8266WiFi.h>
+#include <DHT.h>
+
+const char* ssid = "YOUR_SSID";
+const char* password = "YOUR_PASSWORD";
+const char* server = "api.thingspeak.com";
+const String apiKey = "YOUR_API_KEY";
+
+#define DHTPIN 2
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+
+WiFiClient client;
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("Connected to Wi-Fi");
+}
+
+void loop() {
+  float temp = dht.readTemperature();
+  float hum = dht.readHumidity();
+
+  if (isnan(temp) || isnan(hum)) {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+
+  if (client.connect(server, 80)) {
+    String postStr = apiKey;
+    postStr += "&field1=";
+    postStr += String(temp);
+    postStr += "&field2=";
+    postStr += String(hum);
+    postStr += "\r\n\r\n";
+
+    client.print("POST /update HTTP/1.1\n");
+    client.print("Host: api.thingspeak.com\n");
+    client.print("Connection: close\n");
+    client.print("Content-Type: application/x-www-form-urlencoded\n");
+    client.print("Content-Length: ");
+    client.print(postStr.length());
+    client.print("\n\n");
+    client.print(postStr);
+
+    Serial.println("Data sent to ThingSpeak");
+  }
+  client.stop();
+  delay(20000);
+}
+  </code></pre>
+
+  <h2>10. Retrieve Temperature and Humidity from ThingSpeak</h2>
+  <pre><code class="language-cpp">
+// Requires ESP8266WiFi library
+#include <ESP8266WiFi.h>
+
+const char* ssid = "YOUR_SSID";
+const char* password = "YOUR_PASSWORD";
+const char* server = "api.thingspeak.com";
+const String channelID = "YOUR_CHANNEL_ID";
+
+WiFiClient client;
+
+void setup() {
+  Serial.begin(9600);
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("Connected to Wi-Fi");
+}
+
+void loop() {
+  if (client.connect(server, 80)) {
+    client.print(String("GET /channels/") + channelID + "/feeds/last.txt HTTP/1.1\r\n" +
+                 "Host: " + server + "\r\n" +
+                 "Connection: close\r\n\r\n");
+    delay(100);
+
+    while (client.available()) {
+      String line = client.readStringUntil('\r');
+      Serial.print(line);
+    }
+    Serial.println();
+  }
+  client.stop();
+  delay(20000);
+}
+  </code></pre>
+</body>
+</html>
