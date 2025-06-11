@@ -86,7 +86,7 @@ void loop() {
   <h2>Experiment 4: DHT11 Sensor - Print Temperature & Humidity</h2>
   <p class="connections">Connections: DHT11 VCC → 5V, DATA → Pin 2, GND → GND</p>
   <pre><code class="language-cpp">
-#include "DHT.h"
+#include &lt;DHT.h&gt;
 
 #define DHTPIN 2
 #define DHTTYPE DHT11
@@ -119,9 +119,9 @@ void loop() {
   <h2>Experiment 5: DHT11 + OLED Display</h2>
   <p class="connections">Connections: DHT11: VCC → 5V, DATA → D2, GND → GND, OLED: VCC → 5V, GND → GND, SDA → A4, SCL → A5</p>
   <pre><code class="language-cpp">
-#include <Wire.h>
-#include <Adafruit_SSD1306.h>
-#include <DHT.h>
+#include &lt;Wire.h&gt;
+#include &lt;Adafruit_SSD1306.h&gt;
+#include &lt;DHT.h&gt;
 
 #define DHTPIN 2
 #define DHTTYPE DHT11
@@ -255,9 +255,9 @@ void loop() {
   <h2>Experiment 10: ESP8266 Upload DHT11 to ThingSpeak</h2>
   <p class="connections">Connections: DHT11: VCC → 3.3V, DATA → D4 (GPIO2), GND → GND</p>
   <pre><code class="language-cpp">
-#include <ESP8266WiFi.h>
-#include "DHT.h"
-#include "ThingSpeak.h"
+#include &lt;ESP8266WiFi.h&gt;
+#include &lt;DHT.h&gt;
+#include &lt;ThingSpeak.h&gt;
 
 const char* ssid = "MANOJ 2593";
 const char* password = "26052004";
@@ -318,8 +318,8 @@ void loop() {
   <h2>Experiment 11: ESP8266 Read Data from ThingSpeak</h2>
   <p class="connections">No sensors needed.</p>
   <pre><code class="language-cpp">
-#include "ThingSpeak.h"
-#include <ESP8266WiFi.h>
+#include &lt;ThingSpeak.h&gt;
+#include &lt;ESP8266WiFi.&gt;
 
 const char ssid[] = "MANOJ 2593";
 const char pass[] = "26052004";
